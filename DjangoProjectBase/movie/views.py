@@ -8,7 +8,18 @@ import matplotlib
 import io
 import urllib, base64
 
+from .movie_recommendations_internal import makeRecommendations
 
+
+def recommendations(request):
+    searchTerm = request.GET.get('searchMovie')
+    if searchTerm:
+        allMovies = Movie.objects.all()
+        movie = makeRecommendations(searchTerm)
+        movies = Movie.objects.filter(title__icontains=movie)
+    else:
+        movies = Movie.objects.all()
+    return render(request, 'recommendations.html', {'searchTerm':searchTerm, 'movies':movies}) 
 
 def home(request):
     #return HttpResponse('<h1>Welcome to Home Page</h1>')

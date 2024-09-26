@@ -5,16 +5,15 @@ from openai import OpenAI
 #from openai.embeddings_utils import get_embedding, cosine_similarity
 import numpy as np
 
-_ = load_dotenv('api_keys.env')
+_ = load_dotenv('../api_keys.env')
 client = OpenAI(
     # This is the default and can be omitted
     api_key=os.environ.get('openai_api_key'),
 )
 
-with open('movie_descriptions_embeddings.json', 'r') as file:
+with open('../movie_descriptions_embeddings.json', 'r') as file:
     file_content = file.read()
     movies = json.loads(file_content)
-
 #Esta función devuelve una representación numérica (embedding) de un texto, en este caso
 #la descripción de las películas
     
@@ -29,15 +28,19 @@ def cosine_similarity(a, b):
 #los embeddings de cada una de las películas de la base de datos. La película con la similitud más alta al prompt sería la película
 #recomendada.
 
-req = "película de un pianista"
-emb = get_embedding(req)
 
-sim = []
-for i in range(len(movies)):
-  sim.append(cosine_similarity(emb,movies[i]['embedding']))
-sim = np.array(sim)
-idx = np.argmax(sim)
-print(movies[idx]['title'])
+""" def makeRecommendations(searchterm, movies):
+    emb = get_embedding(searchterm)
+    sim = []
+    for i in range(len(movies)):
+        #embreq = np.frombuffer(movies[i].emb)
+        embreq = np.frombuffer(movies[i].emb, dtype=np.float64)  # Embedding de la base de datos
+        emb = np.array(emb)
+        sim.append(cosine_similarity(embreq,emb))
+    sim = np.array(sim)
+    idx = np.argmax(sim)
+    idx = int(idx)
+    return movies[idx] """
 
 def makeRecommendations(searchterm):
     emb = get_embedding(searchterm)
